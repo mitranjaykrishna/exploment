@@ -19,10 +19,10 @@ app.post("/upload", upload.single("file"), async (req, res) => {
   fs.unlinkSync(file.path);
   console.log(result);
 //   AWS Recognition
-        const data=await detectLabel(result.Key);
-        console.log(data.CustomLabels[0].Name);
-    res.status(200).send(data.CustomLabels[0].Name);
-//   res.status(200).send(result.Key);
+        // const data=await detectLabel(result.Key);
+        // console.log(data.CustomLabels[0].Name);
+    // res.status(200).send(data.CustomLabels[0].Name);
+  res.status(200).send(result.Key);
 });
 
 app.listen(PORT, () => console.log(`liSten on port ${PORT}`));
