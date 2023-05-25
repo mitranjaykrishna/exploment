@@ -89,7 +89,7 @@ const WebcamCapture = () => {
       </div>
 
       <div className="row ">
-        <h1 className="text-center display-1">ff{output}</h1>
+        <h1 className="text-center display-1">{output}</h1>
       </div>
       </div>
       
