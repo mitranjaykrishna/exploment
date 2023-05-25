@@ -7,12 +7,20 @@ const WebcamCapture = () => {
   const [facingMode, setFacingMode] = useState("user");
   const webcamRef = useRef(null);
   const [output, setOutput] = useState();
+  const [screenshot, setScreenshot] = useState(null);
+  const [preview, setPreview] = useState(false);
 
   const captureImage = useCallback(async () => {
     const imageSrc = webcamRef.current.getScreenshot();
+    setScreenshot(imageSrc);
+    setPreview(true);
     const file = dataURLtoFile(imageSrc, "captured_image.png");
     await sendFileToServer(file);
   }, []);
+
+  const retakeImage=()=>{
+    setPreview(false);
+  }
 
   const dataURLtoFile = (dataURL, filename) => {
     const arr = dataURL.split(",");
@@ -45,10 +53,11 @@ const WebcamCapture = () => {
   const toggleFacingMode = () => {
     setFacingMode((prevMode) => (prevMode === "user" ? "environment" : "user"));
   };
+  
 
   return (
-    <div className="row">
-      <div className="row">
+    <Container className="mt-5">
+      <div className="row" style={{display: !preview ? 'block' : 'none'}}>
         <Webcam
           audio={false}
           ref={webcamRef}
@@ -56,16 +65,35 @@ const WebcamCapture = () => {
           videoConstraints={{ facingMode }}
         />
       </div>
-      <div className="row">
-        <button onClick={captureImage}>Capture</button>
+      {/* Preview Code */}
+      <div className="row" style={{display: preview ? 'block' : 'none'}}>
+        {screenshot && (
+          <div>
+            <img src={screenshot} alt="Screenshot" />
+          </div>
+        )}
+      </div>
+      <div className="row justify-content-center">
+      <div className="row" style={{display: !preview ? 'block' : 'none'}}>
+        <button onClick={captureImage} className="btn btn-primary btn-sm mb-2">
+          Capture
+        </button>
+      </div>
+      <div className="row" style={{display: preview ? 'block' : 'none'}}>
+      <button onClick={retakeImage} className="btn btn-primary btn-sm mb-2">
+          Retake
+        </button>
       </div>
       <div className="row">
-        <button onClick={toggleFacingMode}>Toggle Camera</button>
+        <button onClick={toggleFacingMode} className="btn btn-secondary">Rotate Camera</button>
       </div>
-      <div className="row d-flex justify-content-center">
-        <p>fff{output}</p>
+
+      <div className="row ">
+        <h1 className="text-center display-1">ff{output}</h1>
       </div>
-    </div>
+      </div>
+      
+    </Container>
   );
 };
 
